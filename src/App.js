@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import {useEffect, useContext} from 'react';
+import {TodoContext} from './context/TodoContext';
+import AddTask from './components/AddTask';
+import List from './components/List';
+import './scss/styles.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const {tasks, setTasks} = useContext(TodoContext);
+
+	useEffect(() => {
+		const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+		if (storedTasks) {
+			setTasks(storedTasks);
+		}
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem('tasks', JSON.stringify(tasks));
+	}, [tasks]);
+
+	return (
+		<>
+			<h1>To-Do List</h1>
+			<div className='kanban'>
+				<AddTask />
+				<List />
+			</div>
+		</>
+	);
 }
 
 export default App;
